@@ -1,10 +1,14 @@
-variable "name" {}
-
-variable "storage_account_name" {
+variable "name" {
   type = string
 }
 
-variable "quota" {}
+variable "storage_account_id" {
+  type = string
+}
+
+variable "quota" {
+  type = number
+}
 
 variable "access_tier" {
   type    = string
