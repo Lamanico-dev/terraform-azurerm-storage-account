@@ -4,14 +4,15 @@ variable "resource_prefix" {
 }
 
 variable "name" {
-  type    = string
-  default = null
+  description = "Exact storage account name. If null, the module generates a name unless legacy_name is supplied."
+  type        = string
+  default     = null
 }
 
 variable "legacy_name" {
+  description = "Deprecated compatibility input. If supplied, takes precedence over name."
   type        = string
   default     = null
-  description = "Optional.  Can be used to explicily name the storage account resource"
 }
 
 variable "location" {
@@ -19,7 +20,9 @@ variable "location" {
 }
 
 variable "environment" {
-  type = string
+  description = "Optional environment value used for generated naming and default tags. Not required when name or legacy_name is supplied."
+  type        = string
+  default     = null
 }
 
 variable "resource_group_name" {
@@ -51,6 +54,37 @@ variable "storage_account_min_tls_version" {
   default = "TLS1_2"
 }
 
+variable "https_traffic_only_enabled" {
+  description = "Whether HTTPS-only traffic is enforced for the storage account."
+  type        = bool
+  default     = true
+}
+
+variable "public_network_access_enabled" {
+  description = "Whether public network access is enabled for the storage account."
+  type        = bool
+  default     = true
+}
+
+variable "shared_access_key_enabled" {
+  description = "Whether shared access key authentication is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "allow_nested_items_to_be_public" {
+  description = "Whether nested items within containers can be public."
+  type        = bool
+  default     = false
+}
+
+variable "is_hns_enabled" {
+  description = "Whether Hierarchical Namespace is enabled."
+  type        = bool
+  default     = false
+}
+
+# Existing compatibility variables retained
 variable "storage_account_allow_nested_items_to_be_public" {
   type    = bool
   default = false
@@ -69,17 +103,15 @@ variable "managed_identities" {
   default = []
 }
 
-
 # variable storage_account_enable_system_msi {
-#     type = bool
-#     default = false
+#   type    = bool
+#   default = false
 # }
 
 variable "storage_account_custom_domain" {
   type = list(object({
     name          = string
     use_subdomain = bool
-
   }))
   default = []
 }
@@ -88,11 +120,9 @@ variable "storage_account_static_website" {
   type = list(object({
     index_document     = string
     error_404_document = string
-
   }))
   default = []
 }
-
 
 variable "storage_account_network_rules" {
   type = list(object({
@@ -101,6 +131,7 @@ variable "storage_account_network_rules" {
     ip_rules                   = optional(list(string))
     virtual_network_subnet_ids = optional(list(string))
   }))
+
   default = [
     {
       default_action = "Deny"
